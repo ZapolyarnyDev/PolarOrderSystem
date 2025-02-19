@@ -11,13 +11,13 @@ spring:
       discovery:
         locator:
           enabled: true
-    routes:
-      - id: user-service
-        uri: lb://user-service
-        predicates:
-          - Path=/api/auth/**
-        filters:
-          - StripPrefix=2
+      routes:
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/api/auth/**
+          filters:
+            - StripPrefix=2
 
 eureka:
   client:
