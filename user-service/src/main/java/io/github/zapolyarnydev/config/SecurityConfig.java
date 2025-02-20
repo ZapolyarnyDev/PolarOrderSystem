@@ -1,7 +1,10 @@
 package io.github.zapolyarnydev.config;
 
+import io.github.zapolyarnydev.details.OrderUserDetailsService;
 import io.github.zapolyarnydev.jwt.JwtAuthenticationFilter;
-import io.github.zapolyarnydev.service.impl.UserServiceImpl;
+import io.github.zapolyarnydev.repository.UserRepository;
+import io.github.zapolyarnydev.service.impl.AuthServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -24,15 +27,15 @@ public class SecurityConfig {
 
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, OrderUserDetailsService service) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/login", "/auth/register").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider())
+                .authenticationProvider(authenticationProvider(service))
                 .httpBasic(AbstractHttpConfigurer::disable)
-                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter(service), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
@@ -42,20 +45,16 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider(){
+    public AuthenticationProvider authenticationProvider(OrderUserDetailsService service){
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder());
-        provider.setUserDetailsService(userDetailsService());
+        provider.setUserDetailsService(service);
         return provider;
     }
 
-    @Bean
-    public UserDetailsService userDetailsService(){
-        return new UserServiceImpl();
-    }
 
     @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter(){
-        return new JwtAuthenticationFilter(userDetailsService());
+    public JwtAuthenticationFilter jwtAuthenticationFilter(OrderUserDetailsService service){
+        return new JwtAuthenticationFilter(service);
     }
 }
