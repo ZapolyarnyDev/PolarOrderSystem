@@ -18,6 +18,7 @@
 - jjwt
 - Lombok
 - PostgreSQL
+- Docker
 
 ## Авторизация
 Авторизация происходит с помощью Spring Security, через JWT-токены
