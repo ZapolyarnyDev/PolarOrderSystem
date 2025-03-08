@@ -8,6 +8,10 @@ plugins {
 group = "io.github.zapolyarnydev"
 version = "1.0"
 
+repositories{
+    mavenCentral()
+}
+
 tasks.test {
     useJUnitPlatform()
 }

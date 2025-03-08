@@ -13,7 +13,7 @@ spring:
           enabled: true
       routes:
         - id: user-service
-          uri: http://user-service:8096
+          uri: lb://user-service
           predicates:
             - Path=/api/user/**
           filters:

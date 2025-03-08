@@ -32,6 +32,16 @@ dependencyManagement {
     }
 }
 
+tasks.jar {
+    archiveBaseName.set("gateway-server")
+    archiveVersion.set("1.0")
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
 
 tasks.test {
     useJUnitPlatform()

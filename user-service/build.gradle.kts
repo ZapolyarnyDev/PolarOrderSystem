@@ -37,9 +37,14 @@ dependencyManagement {
     }
 }
 
-dependencyManagement {
-    imports {
-        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
+tasks.jar {
+    archiveBaseName.set("user-service")
+    archiveVersion.set("1.0")
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
